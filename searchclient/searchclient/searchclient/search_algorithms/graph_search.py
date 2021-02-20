@@ -85,6 +85,7 @@ def graph_search(initial_state, action_set, goal_description, frontier):
         for action in actions:
             new_state = state.result(action)
             frontier.add(new_state)
+            print(new_state)
 
         iterations += 1
         
