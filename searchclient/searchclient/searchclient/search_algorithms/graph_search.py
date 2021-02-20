@@ -74,26 +74,33 @@ def graph_search(initial_state, action_set, goal_description, frontier):
         if memory.get_usage() > memory.max_usage:
             print('Maximum memory usage exceeded!', file=sys.stderr, flush=True)
             sys.exit(-1)
-
-        
-        
+  
         # Your code here...
-        state = frontier.pop()
-        
-        actions = state.get_applicable_actions(action_set)
+        # Exercise 2.2 - implementing graph search
 
+        # define state as top of frontier and pop state 
+        state = frontier.pop()
+
+        # adds state to expanded
+        expanded.add(state)
+        
+        # finds applicable actions in current state, and loops through these
+        actions = state.get_applicable_actions(action_set)
         for action in actions:
+            # finds new state based on applicable action
             new_state = state.result(action)
-            frontier.add(new_state)
-            print(new_state)
+            # checks if new state has been visited before or is in frontier
+            if ((new_state not in expanded) and (not frontier.contains(new_state))):
+                # if not, new state is added to frontier
+                frontier.add(new_state)
 
         iterations += 1
-        
 
-
-        goal = 0
-
-        raise NotImplementedError()
+        # if state is goal, return True and route to goal
+        if goal_description.is_goal(state): 
+            print("memory:", memory.get_usage())
+            print("states:", len(expanded))
+            return True, state.extract_plan()
 
 # A global variable used to keep track of the start time of the current search
 start_time = 0
