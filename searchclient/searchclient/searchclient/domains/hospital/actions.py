@@ -134,6 +134,7 @@ DEFAULT_MAPF_ACTION_LIBRARY = [
 # An action library for the full hospital domain
 DEFAULT_HOSPITAL_ACTION_LIBRARY = [
     NoOpAction(),
+    
     MoveAction("N"),
     MoveAction("S"),
     MoveAction("E"),
