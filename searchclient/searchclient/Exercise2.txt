@@ -1,0 +1,17 @@
+
+
+## Exercise 2.2
+
+
+## Exercise 2.3
+
+Er states generated bare størrelsen af vores expanded? Størrelsen af vores træ?
+
+MAPF011 ned og 2 til højre og så 1 ned igen. 
+MAPF01 tager 4 til højre og 3 ned. 
+MAPF02 laver 2 ned og derefter lige over hvilket vi også ville gøre. 
+
+
+
+
+Planen for onsdag er at lave 3'eren og 4'eren 
