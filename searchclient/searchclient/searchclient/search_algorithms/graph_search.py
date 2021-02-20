@@ -19,7 +19,7 @@ from domains.hospital.actions import *
 
 def graph_search(initial_state, action_set, goal_description, frontier):
     global start_time
-
+    
     # Set start time
     start_time = time.time()
     iterations = 0
@@ -41,8 +41,9 @@ def graph_search(initial_state, action_set, goal_description, frontier):
     # goal_description.is_goal(node) - Returns true if the state is a goal state.
     # You should also take a look at the frontiers in the strategies folder to see which methods they expose
 
-    return_fixed_solution = True
+    return_fixed_solution = False
     
+
     if return_fixed_solution:
         return True, [
             [MoveAction("S")],
@@ -74,16 +75,27 @@ def graph_search(initial_state, action_set, goal_description, frontier):
             print('Maximum memory usage exceeded!', file=sys.stderr, flush=True)
             sys.exit(-1)
 
-        iterations += 1
-
+        
+        
         # Your code here...
+        state = frontier.pop()
+        
+        actions = state.get_applicable_actions(action_set)
+
+        for action in actions:
+            new_state = state.result(action)
+            frontier.add(new_state)
+
+        iterations += 1
+        
+
+
+        goal = 0
 
         raise NotImplementedError()
 
-
 # A global variable used to keep track of the start time of the current search
 start_time = 0
-
 
 def print_search_status(expanded, frontier):
     global start_time
