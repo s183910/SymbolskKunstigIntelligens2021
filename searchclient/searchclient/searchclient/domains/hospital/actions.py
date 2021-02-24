@@ -98,8 +98,8 @@ class PushAction:
         self.agent_delta = direction_deltas.get(agent_direction)
         self.name = "Push(%s)" % agent_direction
 
-    # def calculate_positions(self, current_agent_position):
-    #     return pos_add(current_agent_position, self.agent_delta)
+    def calculate_positions(self, current_agent_position):
+        return pos_add(current_agent_position, self.agent_delta)
 
     # def is_applicable(self, agent_index, state):
     #     current_agent_position, _ = state.agent_positions[agent_index]
@@ -139,6 +139,24 @@ DEFAULT_HOSPITAL_ACTION_LIBRARY = [
     MoveAction("S"),
     MoveAction("E"),
     MoveAction("W"),
+    PushAction("N","N"),
+    PushAction("N","S"),
+    PushAction("N","E"),
+    PushAction("N","W"),
+    PushAction("S","N"),
+    PushAction("S","S"),
+    PushAction("S","E"),
+    PushAction("S","W"),
+    PushAction("E","N"),
+    PushAction("E","S"),
+    PushAction("E","E"),
+    PushAction("E","W"),
+    PushAction("W","N"),
+    PushAction("W","S"),
+    PushAction("W","E"),
+    PushAction("W","W")
+
+
     # Add Push and Pull actions here
 ]
 
