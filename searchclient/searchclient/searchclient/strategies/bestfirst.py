@@ -37,7 +37,7 @@ class PriorityQueue:
         #    the element itself.
         # The entry finder stores a reference to all elements which ensures that we later can access the entry.
         count = next(self.counter)
-        entry = (priority, -count, element)
+        entry = [priority, -count, element]
         heapq.heappush(self.heap, entry)
         self.entry_finder[element] = entry
 
