@@ -96,12 +96,19 @@ class PushAction:
     def __init__(self, agent_direction, box_direction):
         self.agent_delta = direction_deltas.get(agent_direction)
         self.box_delta = direction_deltas.get(box_direction)
-        self.name = "Push(%s)" % (agent_direction, box_direction)
+        self.name = "Push(%s,%s)" % (agent_direction, box_direction)
+
+    def calculate_agent_positions(self, current_agent_position):
+        return pos_add(current_agent_position, self.agent_delta)
     
+    # function for box position
+    def calculate_box_positions(self, current_box_position):
+        return pos_add(current_box_position, self.box_delta)
+
     def is_applicable(self, agent_index, state):
         current_agent_position, agent_char = state.agent_positions[agent_index]
         # calculate box position based on position and direction of agent
-        current_box_position = self.calculate_positions(current_agent_position)
+        current_box_position = self.calculate_agent_positions(current_agent_position)
 
         box_index, box_char = state.box_at(current_box_position)
 
@@ -113,7 +120,7 @@ class PushAction:
             return False
         
         # Calculate new box position
-        new_box_position = self.calculate_positions(current_box_position)
+        new_box_position = self.calculate_box_positions(current_box_position)
 
         # returns true if new box position is free
         return state.free_at(new_box_position) 
@@ -121,14 +128,77 @@ class PushAction:
     def result(self, agent_index, state):
         current_agent_position, agent_char = state.agent_positions[agent_index]
         # calculate box position based on position and direction of agent
-        current_box_position = self.calculate_positions(current_agent_position)
+        current_box_position = self.calculate_agent_positions(current_agent_position)
         
         # save which box will be moved
         box_index, box_char = state.box_at(current_box_position)
 
         # find new position of box and agent, after Push
-        new_box_position = self.calculate_positions(current_box_position)
-        new_agent_position = self.calculate_positions(current_agent_position)
+        new_box_position = self.calculate_box_positions(current_box_position)
+        new_agent_position = current_box_position
+
+        # update agent and box positions 
+        state.agent_positions[agent_index] = (new_agent_position, agent_char)
+        state.box_positions[box_index] = (new_box_position, box_char)
+
+
+    def conflicts(self, agent_index, state):
+        current_agent_position, agent_char = state.agent_positions[agent_index]
+        current_box_position = self.calculate_agent_positions(current_agent_position)
+        new_agent_position = current_box_position
+        new_box_position = self.calculate_box_positions(current_box_position)
+        
+        # New agent position is a destination because it is unoccupied before the action and occupied after the action.
+        destinations = [new_agent_position, new_box_position]
+        # Since a Move action never moves a box, we can just return the empty value.
+        boxes_moved = [current_box_position]
+        return destinations, boxes_moved
+
+## Herunder forsøges indsættelse af pull action
+class PullAction:
+    def __init__(self, agent_direction, box_direction):
+        self.agent_delta = direction_deltas.get(agent_direction)
+        self.box_delta = direction_deltas.get(box_direction)
+        self.name = "Pull(%s,%s)" % (agent_direction, box_direction)
+
+    def calculate_agent_positions(self, current_agent_position):
+        return pos_add(current_agent_position, self.agent_delta)
+    
+    # function for box position
+    def calculate_box_positions(self, current_box_position):
+        return pos_add(current_box_position, self.box_delta)
+
+    def is_applicable(self, agent_index, state):
+        current_agent_position, agent_char = state.agent_positions[agent_index]
+        # calculate box position based on position of agent and direction of box
+        current_box_position = pos_sub(current_agent_position, self.box_delta)
+
+        box_index, box_char = state.box_at(current_box_position)
+
+        # Check if box is present at location
+        if box_index == -1:
+            return False
+        # Check if agent color matches box color
+        if state.level.colors[box_char] != state.level.colors[agent_char]:
+            return False
+        
+        # Calculate new agent position
+        new_agent_position = self.calculate_agent_positions(current_agent_position)
+        
+        # returns true if new agent position is free
+        return state.free_at(new_agent_position) 
+
+    def result(self, agent_index, state):
+        current_agent_position, agent_char = state.agent_positions[agent_index]
+        # calculate current box position based on position of agent, and direction of box
+        current_box_position = pos_sub(current_agent_position, self.box_delta)
+        
+        # save which box will be moved
+        box_index, box_char = state.box_at(current_box_position)
+
+        # find new position of box and agent, after Push
+        new_box_position = current_agent_position
+        new_agent_position = self.calculate_agent_positions(current_agent_position)
     
         # update agent and box positions 
         state.agent_positions[agent_index] = (new_agent_position, agent_char)
@@ -137,15 +207,20 @@ class PushAction:
 
     def conflicts(self, agent_index, state):
         current_agent_position, agent_char = state.agent_positions[agent_index]
-        current_box_position = self.calculate_positions(current_agent_position)
-        new_agent_position = self.calculate_positions(current_agent_position)
-        new_box_position = self.calculate_positions(current_box_position)
+        current_box_position = pos_sub(current_agent_position, self.box_delta)
+        
+        new_agent_position = self.calculate_agent_positions(current_agent_position)
+        new_box_position = current_agent_position
         
         # New agent position is a destination because it is unoccupied before the action and occupied after the action.
         destinations = [new_agent_position, new_box_position]
         # Since a Move action never moves a box, we can just return the empty value.
         boxes_moved = [current_box_position]
         return destinations, boxes_moved
+
+
+
+
 
 
 # An action library for the multi agent pathfinding
