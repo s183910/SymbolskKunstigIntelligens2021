@@ -93,32 +93,59 @@ class MoveAction:
 
 ## Herunder forsøges indsættelse af push action
 class PushAction:
-
-    def __init__(self, agent_direction):
+    def __init__(self, agent_direction, box_direction):
         self.agent_delta = direction_deltas.get(agent_direction)
-        self.name = "Push(%s)" % agent_direction
+        self.box_delta = direction_deltas.get(box_direction)
+        self.name = "Push(%s)" % (agent_direction, box_direction)
+    
+    def is_applicable(self, agent_index, state):
+        current_agent_position, agent_char = state.agent_positions[agent_index]
+        # calculate box position based on position and direction of agent
+        current_box_position = self.calculate_positions(current_agent_position)
 
-    def calculate_positions(self, current_agent_position):
-        return pos_add(current_agent_position, self.agent_delta)
+        box_index, box_char = state.box_at(current_box_position)
 
-    # def is_applicable(self, agent_index, state):
-    #     current_agent_position, _ = state.agent_positions[agent_index]
-    #     new_agent_position = self.calculate_positions(current_agent_position)
-    #     return state.free_at(new_agent_position)
+        # Check if box is present at location
+        if box_index == -1:
+            return False
+        # Check if agent color matches box color
+        if state.level.colors[box_char] != state.level.colors[agent_char]:
+            return False
+        
+        # Calculate new box position
+        new_box_position = self.calculate_positions(current_box_position)
 
-    # def result(self, agent_index, state):
-    #     current_agent_position, agent_char = state.agent_positions[agent_index]
-    #     new_agent_position = self.calculate_positions(current_agent_position)
-    #     state.agent_positions[agent_index] = (new_agent_position, agent_char)
+        # returns true if new box position is free
+        return state.free_at(new_box_position) 
 
-    # def conflicts(self, agent_index, state):
-    #     current_agent_position, _ = state.agent_positions[agent_index]
-    #     new_agent_position = self.calculate_positions(current_agent_position)
-    #     # New agent position is a destination because it is unoccupied before the action and occupied after the action.
-    #     destinations = [new_agent_position]
-    #     # Since a Move action never moves a box, we can just return the empty value.
-    #     boxes_moved = []
-    #     return destinations, boxes_moved
+    def result(self, agent_index, state):
+        current_agent_position, agent_char = state.agent_positions[agent_index]
+        # calculate box position based on position and direction of agent
+        current_box_position = self.calculate_positions(current_agent_position)
+        
+        # save which box will be moved
+        box_index, box_char = state.box_at(current_box_position)
+
+        # find new position of box and agent, after Push
+        new_box_position = self.calculate_positions(current_box_position)
+        new_agent_position = self.calculate_positions(current_agent_position)
+    
+        # update agent and box positions 
+        state.agent_positions[agent_index] = (new_agent_position, agent_char)
+        state.box_positions[box_index] = (new_box_position, box_char)
+
+
+    def conflicts(self, agent_index, state):
+        current_agent_position, agent_char = state.agent_positions[agent_index]
+        current_box_position = self.calculate_positions(current_agent_position)
+        new_agent_position = self.calculate_positions(current_agent_position)
+        new_box_position = self.calculate_positions(current_box_position)
+        
+        # New agent position is a destination because it is unoccupied before the action and occupied after the action.
+        destinations = [new_agent_position, new_box_position]
+        # Since a Move action never moves a box, we can just return the empty value.
+        boxes_moved = [current_box_position]
+        return destinations, boxes_moved
 
 
 # An action library for the multi agent pathfinding
@@ -139,22 +166,6 @@ DEFAULT_HOSPITAL_ACTION_LIBRARY = [
     MoveAction("S"),
     MoveAction("E"),
     MoveAction("W"),
-    PushAction("N","N"),
-    PushAction("N","S"),
-    PushAction("N","E"),
-    PushAction("N","W"),
-    PushAction("S","N"),
-    PushAction("S","S"),
-    PushAction("S","E"),
-    PushAction("S","W"),
-    PushAction("E","N"),
-    PushAction("E","S"),
-    PushAction("E","E"),
-    PushAction("E","W"),
-    PushAction("W","N"),
-    PushAction("W","S"),
-    PushAction("W","E"),
-    PushAction("W","W")
 
 
     # Add Push and Pull actions here
