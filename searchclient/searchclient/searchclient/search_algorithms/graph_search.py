@@ -78,6 +78,9 @@ def graph_search(initial_state, action_set, goal_description, frontier):
         # Your code here...
         # Exercise 2.2 - implementing graph search
 
+        # if frontier is empty, there is no solution so return false with an empty list
+        if len(frontier) < 1:
+            return False, []
         # define state as top of frontier and pop state 
         state = frontier.pop()
 

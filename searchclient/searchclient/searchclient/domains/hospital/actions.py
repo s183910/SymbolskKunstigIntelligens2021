@@ -135,7 +135,7 @@ class PushAction:
 
         # find new position of box and agent, after Push
         new_box_position = self.calculate_box_positions(current_box_position)
-        new_agent_position = current_box_position
+        new_agent_position = self.calculate_agent_positions(current_agent_position)
 
         # update agent and box positions 
         state.agent_positions[agent_index] = (new_agent_position, agent_char)
@@ -153,7 +153,7 @@ class PushAction:
         # Since a Move action never moves a box, we can just return the empty value.
         boxes_moved = [current_box_position]
         return destinations, boxes_moved
-
+"""
 ## Herunder forsøges indsættelse af pull action
 class PullAction:
     def __init__(self, agent_direction, box_direction):
@@ -218,7 +218,7 @@ class PullAction:
         boxes_moved = [current_box_position]
         return destinations, boxes_moved
 
-
+"""
 
 
 
@@ -244,6 +244,41 @@ DEFAULT_HOSPITAL_ACTION_LIBRARY = [
 
 
     # Add Push and Pull actions here
+    PushAction("N","N"),
+    PushAction("N","S"),
+    PushAction("N","E"),
+    PushAction("N","W"),
+    PushAction("S","N"),
+    PushAction("S","S"),
+    PushAction("S","E"),
+    PushAction("S","W"),
+    PushAction("E","N"),
+    PushAction("E","S"),
+    PushAction("E","E"),
+    PushAction("E","W"),
+    PushAction("W","N"),
+    PushAction("W","S"),
+    PushAction("W","E"),
+    PushAction("W","W"),
+
+    PullAction("N","N"),
+    PullAction("N","S"),
+    PullAction("N","E"),
+    PullAction("N","W"),
+    PullAction("S","N"),
+    PullAction("S","S"),
+    PullAction("S","E"),
+    PullAction("S","W"),
+    PullAction("E","N"),
+    PullAction("E","S"),
+    PullAction("E","E"),
+    PullAction("E","W"),
+    PullAction("W","N"),
+    PullAction("W","S"),
+    PullAction("W","E"),
+    PullAction("W","W"),
+
+
 ]
 
 
