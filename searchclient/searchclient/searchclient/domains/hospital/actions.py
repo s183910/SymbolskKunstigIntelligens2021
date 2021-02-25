@@ -153,7 +153,7 @@ class PushAction:
         # Since a Move action never moves a box, we can just return the empty value.
         boxes_moved = [current_box_position]
         return destinations, boxes_moved
-"""
+
 ## Herunder forsøges indsættelse af pull action
 class PullAction:
     def __init__(self, agent_direction, box_direction):
@@ -218,7 +218,7 @@ class PullAction:
         boxes_moved = [current_box_position]
         return destinations, boxes_moved
 
-"""
+
 
 
 
