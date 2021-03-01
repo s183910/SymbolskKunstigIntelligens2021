@@ -65,7 +65,7 @@ def graph_search(initial_state, action_set, goal_description, frontier):
     expanded = set()
 
     while True:
-
+        
         # Print a progress status message every 10000 iterations
         if iterations % 10000 == 0 and iterations != 0:
             print_search_status(expanded, frontier)
@@ -79,9 +79,12 @@ def graph_search(initial_state, action_set, goal_description, frontier):
         # Exercise 2.2 - implementing graph search
 
         # if frontier is empty, there is no solution so return false with an empty list
-        if len(frontier) < 1:
-            return False, []
+   
         # define state as top of frontier and pop state 
+        
+        if frontier.is_empty():
+            return False, []
+        
         state = frontier.pop()
 
         # adds state to expanded
@@ -101,8 +104,7 @@ def graph_search(initial_state, action_set, goal_description, frontier):
 
         # if state is goal, return True and route to goal
         if goal_description.is_goal(state): 
-            print("memory:", memory.get_usage())
-            print("states:", len(expanded))
+            print_search_status(expanded, frontier)
             return True, state.extract_plan()
 
 # A global variable used to keep track of the start time of the current search
