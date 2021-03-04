@@ -28,7 +28,13 @@ class HospitalGoalCountHeuristics:
 
     def h(self, state, goal_description):
         # Your code goes here...
-        return 0
+        n_goals = goal_description.num_sub_goals()
+
+        for index in range(goal_description.num_sub_goals()):
+            sub_goal = goal_description.get_sub_goal(index)
+            n_goals -= sub_goal.is_goal(state)
+
+        return n_goals
 
 
 class HospitalAdvancedHeuristics:

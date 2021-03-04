@@ -81,38 +81,48 @@ class FrontierBestFirst:
     def __init__(self):
         self.goal_description = None
         # Your code here...
-        raise NotImplementedError()
+
+        self.queue = PriorityQueue()
+        self.set = set()
+
 
     def prepare(self, goal_description):
         self.goal_description = goal_description
         # Prepare is called at the beginning of a search and since we will sometimes reuse frontiers for multiple
         # searches, prepares must ensure that state is cleared.
-        
+        self.queue.clear()
+        self.set.clear()
         # Your code here...
-        raise NotImplementedError()
+        #raise NotImplementedError()
 
     def f(self, state, goal_description):
         raise Exception("FrontierBestFirst should not be directly used. Instead use a subclass overriding f()")
 
     def add(self, state):
-        # Your code here...
-        raise NotImplementedError()
+
+         # Your code here...
+
+        # self.queue.append(state)
+        self.set.add(state)
 
     def pop(self):
         # Your code here...
-        raise NotImplementedError()
+        state = self.queue.pop()
+        self.set.remove(state)
+        return state
+
 
     def is_empty(self):
         # Your code here...
-        raise NotImplementedError()
+        return self.size == 0
 
     def size(self):
-        # Your code here...
-        raise NotImplementedError()
-
+        return self.size
+    
     def contains(self, state):
         # Your code here...
-        raise NotImplementedError()
+        return state in self.set
+
 
 
 # The FrontierAStar and FrontierGreedy classes extend the FrontierBestFirst class, that is, they are
@@ -126,6 +136,9 @@ class FrontierAStar(FrontierBestFirst):
 
     def f(self, state, goal_description):
         # Your code here...
+
+
+
         raise NotImplementedError()
 
 
@@ -137,4 +150,13 @@ class FrontierGreedy(FrontierBestFirst):
 
     def f(self, state, goal_description):
         # Your code here...
-        raise NotImplementedError()
+
+        goals_left = goal_description.num_sub_goals()
+
+        for index in range(goal_description.num_sub_goals()):
+            sub_goal = goal_description.get_sub_goal(index)
+            goals_left -= sub_goal.is_goal(state)
+
+        return goals_left
+
+        #raise NotImplementedError()
