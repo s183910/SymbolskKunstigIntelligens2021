@@ -102,7 +102,9 @@ class FrontierBestFirst:
 
          # Your code here...
 
-        # self.queue.append(state)
+        # calculate priority of state and add to queue
+        priority = self.f(state,self.goal_description)
+        self.queue.add(state,priority)
         self.set.add(state)
 
     def pop(self):
@@ -111,16 +113,16 @@ class FrontierBestFirst:
         self.set.remove(state)
         return state
 
-
     def is_empty(self):
         # Your code here...
-        return self.size == 0
+        return self.queue.size() == 0
 
     def size(self):
-        return self.size
+        return self.queue.size()
     
     def contains(self, state):
         # Your code here...
+
         return state in self.set
 
 
@@ -136,10 +138,11 @@ class FrontierAStar(FrontierBestFirst):
 
     def f(self, state, goal_description):
         # Your code here...
+        h = self.heuristic.h(state,goal_description)
+        
+        g = state.path_cost
 
-
-
-        raise NotImplementedError()
+        return g+h
 
 
 class FrontierGreedy(FrontierBestFirst):
@@ -150,13 +153,4 @@ class FrontierGreedy(FrontierBestFirst):
 
     def f(self, state, goal_description):
         # Your code here...
-
-        goals_left = goal_description.num_sub_goals()
-
-        for index in range(goal_description.num_sub_goals()):
-            sub_goal = goal_description.get_sub_goal(index)
-            goals_left -= sub_goal.is_goal(state)
-
-        return goals_left
-
-        #raise NotImplementedError()
+        return self.heuristic.h(state,goal_description)
