@@ -142,8 +142,7 @@ class FrontierAStar(FrontierBestFirst):
         
         g = state.path_cost
 
-        return g+h
-
+        return (g+h)
 
 class FrontierGreedy(FrontierBestFirst):
 

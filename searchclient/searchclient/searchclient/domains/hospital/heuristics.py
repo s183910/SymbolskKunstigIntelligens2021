@@ -51,4 +51,6 @@ class HospitalAdvancedHeuristics:
     def h(self, state, goal_description):
 
         # Your heuristic goes here...
+
+        
         return 0
