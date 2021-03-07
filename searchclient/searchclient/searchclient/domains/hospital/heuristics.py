@@ -11,10 +11,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from numpy import linalg as LA
 import sys
 import itertools
 from utils import pos_add, pos_sub, APPROX_INFINITY
-
 
 class HospitalGoalCountHeuristics:
 
@@ -28,6 +28,7 @@ class HospitalGoalCountHeuristics:
 
     def h(self, state, goal_description):
         # Your code goes here...
+       
         n_goals = goal_description.num_sub_goals()
 
         for index in range(goal_description.num_sub_goals()):
@@ -40,17 +41,35 @@ class HospitalGoalCountHeuristics:
 class HospitalAdvancedHeuristics:
 
     def __init__(self):
+
         pass
 
     def preprocess(self, level):
         # This function will be called a single time prior to the search allowing us to preprocess the level such as
         # pre-computing lookup tables or other acceleration structures
+        
+        
         pass
 
 
     def h(self, state, goal_description):
+        goals = goal_description.goals
 
+        boxes = state.box_positions
+
+        
+
+        for box,goal in zip(boxes,goals):
+            print(box, goal, file = sys.stderr)
+
+        #print(boxes, file = sys.stderr)
+        
+        #length = LA.norm([boxes,goals])
+        
+        #print(length,file=sys.stderr)
         # Your heuristic goes here...
+
+
 
         
         return 0
