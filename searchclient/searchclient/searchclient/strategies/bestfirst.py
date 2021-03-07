@@ -138,5 +138,4 @@ class FrontierGreedy(FrontierBestFirst):
         self.heuristic = heuristic
 
     def f(self, state, goal_description):
-        # Your code here...
         return self.heuristic.h(state,goal_description)
