@@ -80,49 +80,38 @@ class FrontierBestFirst:
 
     def __init__(self):
         self.goal_description = None
-        # Your code here...
-
         self.queue = PriorityQueue()
         self.set = set()
 
 
     def prepare(self, goal_description):
         self.goal_description = goal_description
-        # Prepare is called at the beginning of a search and since we will sometimes reuse frontiers for multiple
-        # searches, prepares must ensure that state is cleared.
+        # Prepare is called at the beginning of a search and since we will sometimes reuse frontiers 
+        # for multiple  searches, prepares must ensure that state is cleared.
         self.queue.clear()
         self.set.clear()
-        # Your code here...
-        #raise NotImplementedError()
 
     def f(self, state, goal_description):
         raise Exception("FrontierBestFirst should not be directly used. Instead use a subclass overriding f()")
 
     def add(self, state):
-
-         # Your code here...
-
         # calculate priority of state and add to queue
         priority = self.f(state,self.goal_description)
         self.queue.add(state,priority)
         self.set.add(state)
 
     def pop(self):
-        # Your code here...
         state = self.queue.pop()
         self.set.remove(state)
         return state
 
     def is_empty(self):
-        # Your code here...
         return self.queue.size() == 0
 
     def size(self):
         return self.queue.size()
     
     def contains(self, state):
-        # Your code here...
-
         return state in self.set
 
 
