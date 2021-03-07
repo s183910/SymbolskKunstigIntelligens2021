@@ -126,9 +126,7 @@ class FrontierAStar(FrontierBestFirst):
         self.heuristic = heuristic
 
     def f(self, state, goal_description):
-        # Your code here...
         h = self.heuristic.h(state,goal_description)
-        
         g = state.path_cost
 
         return (g+h)
