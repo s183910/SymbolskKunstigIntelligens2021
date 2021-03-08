@@ -53,51 +53,34 @@ class HospitalAdvancedHeuristics:
 
 
     def h(self, state, goal_description):
+        
+
+        # Get name and position of box and goals
         goals = goal_description.goals
-
         boxes = state.box_positions
-    
-        #for goal in goals:
+        
+        # index of boxes which have been allocated for specific goals
         indexes = []
-
+        
+        # sum of distances between goals and boxes
         sum_dist = 0
 
-        #print(goals,file = sys.stderr)
-
+        # iterate over each goal, as each goal only needs one box, and the number of goals always is less or equal to the number of boxes
         for goal in goals:
-            for idx,box in enumerate(boxes):
+            for idx, box in enumerate(boxes):
+                # if box has not already been allocated to a specifik goal
                 if (goal[1] == box[1]) and (idx not in indexes):     
-
-                    # Define two points as position of box and goal
-                    # x1 = goal[0][0]
-                    # y1 = goal[0][1]
-
-                    # x2 = box[0][0]
-                    # y2 = box[0][1]
-
-                    #Calculate euclidean distance between these points                    
+                    # Calculate euclidian distance between these points and add to total distance             
+                    # sum_dist += abs(goal[0][0]-box[0][0])+abs(goal[0][1]-box[0][1])
+                    # Calculate euclidian distance between these points and add to total distance             
                     sum_dist += math.sqrt((goal[0][0]-box[0][0])**2+(goal[0][1]-box[0][1])**2)
+                    
                     indexes.append(idx)
                     break
-
+                
+        # return average distance between all goals and allocated boxes
         return sum_dist/len(goals)
 
 
 
 
-
-
-        #print(boxes, file = sys.stderr)
-        
-        #length = LA.norm([boxes,goals])
-        
-        #print(length,file=sys.stderr)
-        # Your heuristic goes here...
-
-        # n_goals = goal_description.num_sub_goals()
-
-        # for index in range(goal_description.num_sub_goals()):
-        #     sub_goal = goal_description.get_sub_goal(index)
-        #     n_goals -= sub_goal.is_goal(state)
-
-        # return n_goals
