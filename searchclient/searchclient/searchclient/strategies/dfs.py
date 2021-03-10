@@ -16,7 +16,6 @@ from collections import deque
 class FrontierDFS:
 
     def __init__(self):
-        # Your code here...
         self.queue = deque()
         self.set = set()
 
