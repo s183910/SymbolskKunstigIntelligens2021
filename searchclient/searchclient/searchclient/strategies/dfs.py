@@ -16,38 +16,31 @@ from collections import deque
 class FrontierDFS:
 
     def __init__(self):
-        # Your code here...
         self.queue = deque()
         self.set = set()
 
     def prepare(self, goal_description):
         # Prepare is called at the beginning of a search and since we will sometimes reuse frontiers for multiple
         # searches, prepares must ensure that state is cleared.
-        
-        # Your code here...
+
         self.queue.clear()
         self.set.clear()
  
     def add(self, state):
-        # Your code here...
         self.queue.append(state)
         self.set.add(state)
   
     def pop(self):
-        # Your code here...
-        state = self.queue.pop()
+        state = self.queue.pop() # This one pops right 
         self.set.remove(state)
         return state
 
     def is_empty(self):
-        # Your code here...
         return len(self.queue) == 0
 
     def size(self):
-        # Your code here...
         return len(self.queue)
 
     def contains(self, state):
-        # Your code here...
         return state in self.set
 
