@@ -76,14 +76,14 @@ def graph_search(initial_state, action_set, goal_description, frontier):
             sys.exit(-1)
   
         # Your code here...
+
         # Exercise 2.2 - implementing graph search
 
-        # if frontier is empty, there is no solution so return false with an empty list
-        # define state as top of frontier and pop state 
-        
+        # if frontier is empty, there is no solution so return false along with an empty list
         if frontier.is_empty():
             return False, []
         
+        # define state as top of frontier and pop state 
         state = frontier.pop()
 
         # adds state to expanded
@@ -91,6 +91,7 @@ def graph_search(initial_state, action_set, goal_description, frontier):
         
         # finds applicable actions in current state, and loops through these
         actions = state.get_applicable_actions(action_set)
+
         for action in actions:
             # finds new state based on applicable action
             new_state = state.result(action)
@@ -101,7 +102,7 @@ def graph_search(initial_state, action_set, goal_description, frontier):
 
         iterations += 1
 
-        # if state is goal, return True and route to goal
+        # if state is goal, return True along with route to goal
         if goal_description.is_goal(state): 
             print_search_status(expanded, frontier)
             return True, state.extract_plan()

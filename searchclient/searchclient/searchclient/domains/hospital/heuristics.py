@@ -41,7 +41,6 @@ class HospitalGoalCountHeuristics:
 class HospitalAdvancedHeuristics:
 
     def __init__(self):
-
         pass
 
     def preprocess(self, level):
@@ -53,34 +52,27 @@ class HospitalAdvancedHeuristics:
 
 
     def h(self, state, goal_description):
-        
 
-        # Get name and position of box and goals
-        goals = goal_description.goals
+        # # Get name and position of box and goals
+        goals = goal_description.box_goals
         boxes = state.box_positions
-        
-        # index of boxes which have been allocated for specific goals
-        indexes = []
-        
+        # boxes which have been allocated to a goal
+        used_boxes = []
+
         # sum of distances between goals and boxes
-        sum_dist = 0
+        dist = 0
 
-        # iterate over each goal, as each goal only needs one box, and the number of goals always is less or equal to the number of boxes
+
+        # we iterate over goals, as each goal only needs one box, and the number of goals always is less or equal to the number of boxes
         for goal in goals:
-            for idx, box in enumerate(boxes):
-                # if box has not already been allocated to a specifik goal
-                if (goal[1] == box[1]) and (idx not in indexes):     
-                    # Calculate euclidian distance between these points and add to total distance             
-                    # sum_dist += abs(goal[0][0]-box[0][0])+abs(goal[0][1]-box[0][1])
-                    # Calculate euclidian distance between these points and add to total distance             
-                    sum_dist += math.sqrt((goal[0][0]-box[0][0])**2+(goal[0][1]-box[0][1])**2)
-                    
-                    indexes.append(idx)
+            for box_idx, box in enumerate(boxes):
+                # continue if box is a match and has not already been allocated to a specific goal
+                if (goal[1] == box[1] and (box_idx not in used_boxes)):     
+                    # Calculate manhattan distance between these points and add to total distance   
+                    used_boxes.append(box_idx)          
+                    dist += abs(goal[0][0]-box[0][0])+abs(goal[0][1]-box[0][1])
                     break
-                
-        # return average distance between all goals and allocated boxes
-        return sum_dist/len(goals)
-
-
-
+        
+        # Return average distance
+        return dist/len(goals) 
 
