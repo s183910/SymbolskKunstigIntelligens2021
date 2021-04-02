@@ -11,11 +11,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
 import argparse
 import memory
 import re
+import sys
 from agent_types.classic import classic_agent_type
+from agent_types.serial import serial_agent_type
+from agent_types.decentralised import decentralised_agent_type
+from agent_types.helper import helper_agent_type
+from agent_types.non_deterministic import non_deterministic_agent_type
 from domains.hospital import *
 from strategies.bfs import FrontierBFS
 from strategies.dfs import FrontierDFS
@@ -57,6 +61,24 @@ def parse_command_line_arguments():
     heuristic_group.add_argument('-advancedheuristic', action='store_const', dest='heuristic', const='advanced',
                                  help='Use an advanced heuristic.')
 
+    action_library_group = parser.add_mutually_exclusive_group()
+    action_library_group.add_argument('-defaultactions', action='store_const', dest='action_library', const='default',
+                                      help='Use the default action library.')
+    action_library_group.add_argument('-sticky', action='store_const', dest='action_library', const='sticky',
+                                      help='Use an action library with sticky goals.')
+
+    agent_type_group = parser.add_mutually_exclusive_group()
+    agent_type_group.add_argument('-classic', action='store_const', dest='agent_type', const='classic',
+                                  help='Use a classic centralized agent type.')
+    agent_type_group.add_argument('-serial', action='store_const', dest='agent_type', const='serial',
+                                  help='Use a serial centralized agent type.')
+    agent_type_group.add_argument('-decentralised', action='store_const', dest='agent_type', const='decentralised',
+                                  help='Use a decentralised agent type.')
+    agent_type_group.add_argument('-helper', action='store_const', dest='agent_type', const='helper',
+                                  help='Use a helper agent type.')
+    agent_type_group.add_argument('-nondeterministic', action='store_const', dest='agent_type', const='nondeterministic',
+                                  help='Use a non deterministic agent type.')
+
     args = parser.parse_args()
 
     # Set max memory usage allowed (soft limit).
@@ -67,15 +89,15 @@ def parse_command_line_arguments():
     max_memory_gb = int(max_memory_gb_match.group(1))
     memory.max_usage = max_memory_gb * 1024 * 1024 * 1024
 
-    return args.strategy, args.heuristic
+    return args.strategy, args.heuristic, args.action_library, args.agent_type
 
 
 if __name__ == '__main__':
 
-    strategy_name, heuristic_name = parse_command_line_arguments()
+    strategy_name, heuristic_name, action_library_name, agent_type_name = parse_command_line_arguments()
 
     # Construct client name by removing all missing arguments and joining them together into a single string
-    name_components = [strategy_name, heuristic_name]
+    name_components = [agent_type_name, strategy_name, heuristic_name, action_library_name]
     client_name = " ".join(filter(lambda name: name is not None, name_components))
 
     # Send client name to server
@@ -86,6 +108,10 @@ if __name__ == '__main__':
     # Domain name is always second line in file
     domain_name = level_lines[1]
 
+    # If no specific action library is requested, we implicitly assume it to be the "default" action library
+    if action_library_name is None:
+        action_library_name = 'default'
+
     # Setup domain specific structures
     level = None
     initial_state = None
@@ -95,10 +121,13 @@ if __name__ == '__main__':
     if domain_name == 'hospital':
         level = HospitalLevel.parse_level_lines(level_lines)
         initial_state = HospitalState(level, level.initial_agent_positions, level.initial_box_positions)
-        goal_description = HospitalGoalDescription(level, level.all_goals)
+        goal_description = HospitalGoalDescription(level, level.box_goals + level.agent_goals)
 
         # Construct the requested action library
-        action_library = DEFAULT_HOSPITAL_ACTION_LIBRARY
+        if action_library_name == 'default':
+            action_library = DEFAULT_HOSPITAL_ACTION_LIBRARY
+        elif action_library_name == 'sticky':
+            action_library = STICKY_HOSPITAL_ACTION_LIBRARY
 
         # Construct the requested heuristic
         if heuristic_name == 'goalcount':
@@ -125,7 +154,24 @@ if __name__ == '__main__':
         frontier = FrontierAStar(heuristic)
     elif strategy_name == 'greedy':
         frontier = FrontierGreedy(heuristic)
+    else:
+        print(f"Unrecognized strategy {strategy_name}", file=sys.stderr)
 
-    # Run the agent type
-    classic_agent_type(level, initial_state, action_library, goal_description, frontier)
+    # If no specific agent type is requested, we implicitly assume it to be the "classic" type
+    if agent_type_name is None:
+        agent_type_name = 'classic'
+
+    # Run the requested agent type
+    if agent_type_name == 'classic':
+        classic_agent_type(level, initial_state, action_library, goal_description, frontier)
+    elif agent_type_name == 'serial':
+        serial_agent_type(level, initial_state, action_library, goal_description, frontier)
+    elif agent_type_name == 'decentralised':
+        decentralised_agent_type(level, initial_state, action_library, goal_description, frontier)
+    elif agent_type_name == 'helper':
+        helper_agent_type(level, initial_state, action_library, goal_description, frontier)
+    elif agent_type_name == 'nondeterministic':
+        non_deterministic_agent_type(level, initial_state, action_library, goal_description)
+    else:
+        print(f"Unrecognized agent type! {agent_type_name}", file=sys.stderr)
 
