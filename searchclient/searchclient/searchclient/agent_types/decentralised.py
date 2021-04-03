@@ -24,4 +24,32 @@ def decentralised_agent_type(level, initial_state, action_library, goal_descript
     # use 'print(joint_action_to_string(joint_action), flush=True)' to send a joint_action to the server and
     # use 'parse_response(read_line())' to read back an array of booleans indicating whether each individual action
     #   in the joint action succeeded.
-    raise NotImplementedError()
+
+    num_agents = level.num_agents
+
+    plan = []
+
+    for agent_index in range(num_agents):
+
+        current_agent_position, agent_char = initial_state.agent_positions[agent_index]
+
+        color = level.colors[agent_char]
+
+        mono_problem = initial_state.color_filter(color)
+
+        mono_plan = serial_graph_search(mono_problem, action_set, goal_description, frontier)
+
+        plan.append(mono_plan)
+        
+    print(plan[0])
+
+
+    # while any(plan):
+    #     for agent_index in range(num_agents):
+    #         if plan[agent_index]:
+
+
+    return False
+
+
+    
