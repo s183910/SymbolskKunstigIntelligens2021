@@ -33,7 +33,7 @@ def serial_agent_type(level, initial_state, action_library, goal_description, fr
         # Send the joint action to the server
         print(joint_action_to_string(joint_action), flush=True)
         # Uncomment the below line to print the executed actions to the command line for debugging purposes
-        # print(joint_action_to_string(joint_action), file=sys.stderr, flush=True)
+        print(joint_action_to_string(joint_action), file=sys.stderr, flush=True)
 
         # Read back whether the agents succeeded in performing the joint action
         execution_successes = parse_response(read_line())
