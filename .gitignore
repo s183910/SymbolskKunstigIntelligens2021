@@ -7,7 +7,7 @@ __pycache__/
 *.so
 
 # Server things
-.pyc
+*.pyc
 
 # Distribution / packaging
 .Python
