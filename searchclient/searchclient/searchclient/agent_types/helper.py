@@ -60,16 +60,30 @@ def helper_agent_type(level, initial_state, action_library, goal_description, fr
                 # print(joint_action_to_string(joint_action), file=sys.stderr, flush=True)
 
                 # Read back whether the agents succeeded in performing the joint action
-                execution_success = parse_response(read_line())
+                execution_successes = parse_response(read_line())              
                 
-                if execution_success:
+                if execution_successes[0]:
                     initial_state = initial_state.result(joint_action)
                     plan.pop(0)
                 
                 else:
-                    helpee_position, helpee_char = initial_state.agent_positions[0]
+                    # helpee_position, helpee_char = initial_state.agent_positions[0]
+                    # print(joint_action[0], file = sys.stderr)
+                    box_char = "B"
+                    box_color = level.colors[box_char]
+
+                    exists=0
+                    for agent_index in range(level.num_agents):
+                        _ , agent_char = initial_state.agent_positions[agent_index]
+                        if agent_char == box_char:
+                            exists=1
+                            break
+                    if exists:
+                        
+
+                            
                     
-                    print(joint_action[0], file = sys.stderr)
+  
 
 
 
