@@ -29,7 +29,7 @@ def classic_agent_type(level, initial_state, action_library, goal_description, f
     print("Found solution of length %d" % len(plan), file=sys.stderr)
 
     for joint_action in plan:
-
+        print(joint_action)
         # Send the joint action to the server
         print(joint_action_to_string(joint_action), flush=True)
         # Uncomment the below line to print the executed actions to the command line for debugging purposes
