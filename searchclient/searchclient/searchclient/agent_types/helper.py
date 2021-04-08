@@ -16,6 +16,23 @@ from search_algorithms.graph_search import graph_search
 from utils import *
 
 
+def negative_goals(helpee_position, obstacle_char, plan):
+    negative_goals = []
+    # Loop through all actions in plan
+    for action in plan:
+        # Get the direction helpee wants to move
+        helpee_delta = action[0].agent_delta
+        # Calculate the position that needs to be free
+        free_state = (helpee_position[0] + helpee_delta[0], helpee_position[1] +  helpee_delta[1])
+        # Define new sub_goal as the obstacle not being in free_state
+        sub_goal = (free_state, obstacle_char, False)
+        # Append to list of goals
+        negative_goals.append(sub_goal)
+        # Update state of helpee
+        helpee_position = free_state
+    
+    return negative_goals
+
 
 
 def helper_agent_type(level, initial_state, action_library, goal_description, frontier):
@@ -38,7 +55,6 @@ def helper_agent_type(level, initial_state, action_library, goal_description, fr
     # Define mono problem and mono goal
     mono_problem = initial_state.color_filter(helpee_color)
     mono_goal = goal_description.color_filter(helpee_color)
-
 
     for index in range(mono_goal.num_sub_goals()):
             sub_goal = mono_goal.get_sub_goal(index)
@@ -67,24 +83,34 @@ def helper_agent_type(level, initial_state, action_library, goal_description, fr
                     plan.pop(0)
                 
                 else:
-                    # helpee_position, helpee_char = initial_state.agent_positions[0]
-                    # print(joint_action[0], file = sys.stderr)
-                    box_char = "B"
-                    box_color = level.colors[box_char]
+                    helpee_delta = joint_action[0].agent_delta
+                    helpee_position , helpee_char = initial_state.agent_positions[0]
+                    obstacle_position = (helpee_position[0] + helpee_delta[0],helpee_position[1] + helpee_delta[1])
+                    # print(helpee_position,file=sys.stderr)
+                    # print(helpee_delta,file=sys.stderr)
+                    # print(obstacle_position, file=sys.stderr)
+                    obstacle_index, obstacle_char = initial_state.box_at(obstacle_position)
+                    # helpee_position , helpee_char = initial_state.box_positions[0]
+                    obstacle_color = level.colors[obstacle_char]
 
                     exists=0
                     for agent_index in range(level.num_agents):
                         _ , agent_char = initial_state.agent_positions[agent_index]
-                        if agent_char == box_char:
-                            exists=1
+                        if agent_char == obstacle_char:
                             break
-                    if exists:
-                        
 
-                            
+                    negative = negative_goals(helpee_position, obstacle_char, plan)
+                    negative_goal_description = goal_description.create_new_goal_description_of_same_type(negative)
                     
-  
+                    helper_action_set = [[GenericNoOp()]] * level.num_agents    
+                    helper_action_set[agent_index] = action_library
 
+                    helper_success, helper_plan = graph_search(initial_state, helper_action_set, negative_goal_description, frontier)
+                    
+                    if helper_success:
+                        joint_action = helper_plan.pop(0)
+                        helper_action = joint_action[agent_index]
 
-
-    raise NotImplementedError()
+                        print(joint_action_to_string(joint_action), flush=True)
+                        initial_state = initial_state.result(joint_action)
+                        
