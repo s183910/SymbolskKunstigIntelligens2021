@@ -35,6 +35,7 @@ def negative_goals(helpee_position, obstacle_char, plan):
 
 
 
+
 def helper_agent_type(level, initial_state, action_library, goal_description, frontier):
 
     # Here you should implement the HELPER-AGENT algorithm.
