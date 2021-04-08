@@ -109,9 +109,10 @@ def helper_agent_type(level, initial_state, action_library, goal_description, fr
                     helper_success, helper_plan = graph_search(initial_state, helper_action_set, negative_goal_description, frontier)
                     
                     if helper_success:
-                        joint_action = helper_plan.pop(0)
-                        helper_action = joint_action[agent_index]
+                        while any(helper_plan):
+                            joint_action = helper_plan.pop(0)
+                            helper_action = joint_action[agent_index]
 
-                        print(joint_action_to_string(joint_action), flush=True)
-                        initial_state = initial_state.result(joint_action)
+                            print(joint_action_to_string(joint_action), flush=True)
+                            initial_state = initial_state.result(joint_action)
                         
