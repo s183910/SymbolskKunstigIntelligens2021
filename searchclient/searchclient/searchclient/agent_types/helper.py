@@ -98,8 +98,10 @@ def helper_agent_type(level, initial_state, action_library, goal_description, fr
                     for agent_index in range(level.num_agents):
                         _ , agent_char = initial_state.agent_positions[agent_index]
                         if agent_char == obstacle_char:
+                            exists = 1
                             break
-
+                    if exists:
+                        return False
                     negative = negative_goals(helpee_position, obstacle_char, plan)
                     negative_goal_description = goal_description.create_new_goal_description_of_same_type(negative)
                     
@@ -115,4 +117,6 @@ def helper_agent_type(level, initial_state, action_library, goal_description, fr
 
                             print(joint_action_to_string(joint_action), flush=True)
                             initial_state = initial_state.result(joint_action)
+                    else:
+                        return False
                         
