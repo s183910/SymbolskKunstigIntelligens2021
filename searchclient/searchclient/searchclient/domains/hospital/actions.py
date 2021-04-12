@@ -249,14 +249,15 @@ class StickyMoveAction:
     def conflicts(self, agent_index, state):
         current_agent_position, _ = state.agent_positions[agent_index]
         new_agent_position = self.calculate_positions(current_agent_position)
-        # New agent position is a destination because it is unoccupied before the action and occupied after the action.
+        # New agent position is a destination because it is unoccupied before the 
+        # action and occupied after the action.
         destinations = [new_agent_position]
         # Since a Move action never moves a box, we can just return the empty value.
         boxes_moved = []
         return destinations, boxes_moved
 
 
-## Herunder forsøges indsættelse af push action
+## Herunder indsættes sticky push action
 class StickyPushAction:
     def __init__(self, agent_direction, box_direction):
         self.agent_delta = direction_deltas.get(agent_direction)
@@ -271,9 +272,6 @@ class StickyPushAction:
         return pos_add(current_box_position, self.box_delta)
 
     def is_applicable(self, agent_index, state):
-
-    
-
         current_agent_position, agent_char = state.agent_positions[agent_index]
         # calculate box position based on position and direction of agent
         current_box_position = self.calculate_agent_positions(current_agent_position)
@@ -294,12 +292,8 @@ class StickyPushAction:
         all_goals_box = state.level.box_goal_at(current_box_position) == box_char
         all_goals_agent = state.level.agent_goal_at(current_agent_position) == agent_char
 
-
         # returns true if new box position is free
         return state.free_at(new_box_position) and not all_goals_agent and not all_goals_box 
-
-
-
 
     def result(self, agent_index, state):
         current_agent_position, agent_char = state.agent_positions[agent_index]
@@ -317,7 +311,6 @@ class StickyPushAction:
         state.agent_positions[agent_index] = (new_agent_position, agent_char)
         state.box_positions[box_index] = (new_box_position, box_char)
 
-
     def conflicts(self, agent_index, state):
         current_agent_position, agent_char = state.agent_positions[agent_index]
         current_box_position = self.calculate_agent_positions(current_agent_position)
@@ -330,7 +323,7 @@ class StickyPushAction:
         boxes_moved = [current_box_position]
         return destinations, boxes_moved
 
-## Herunder forsøges indsættelse af pull action
+## Herunder indsættes pull action
 class StickyPullAction:
     def __init__(self, agent_direction, box_direction):
         self.agent_delta = direction_deltas.get(agent_direction)
@@ -361,7 +354,6 @@ class StickyPullAction:
         # Calculate new agent position
         new_agent_position = self.calculate_agent_positions(current_agent_position)
         
-
         # New for exercise 1.1 Mavis2
         all_goals_box = state.level.box_goal_at(current_box_position) == box_char
         all_goals_agent = state.level.agent_goal_at(current_agent_position) == agent_char
