@@ -1,0 +1,26 @@
+#domain
+hospital
+#levelname
+KatogRas_5B
+#colors
+red: 0, A
+green: 1, B
+#initial
+++++++++++++
++  0     + +
++ ++++++++A+
++        B +
+++++++++++ +
++1      BB +
++        BB+
+++++++++++++
+#goal
+++++++++++++
++        +A+
++ ++++++++ +
++   B      +
+++++++++++ +
++          +
++   B      +
+++++++++++++
+#end
