@@ -12,38 +12,53 @@
 # limitations under the License.
 
 import sys
-d=0
 
-def OR_search(state, path, action_set, goal_description,results):
+def OR_search(state, action_set, goal_description,results, path, depth):
+
     if (goal_description.is_goal(state)):
-        return 0,[]
-    # if state is on path: return False
-    if state in path:
-        return 0,False
+        return True,[]
+
+    # if depth > 1000:
+    #     return False, False
+    
+    # if state in path:
+    #     return False,None
 
     actions = state.get_applicable_actions(action_set)
+
     for action in actions:
-        plan = [] 
-        or_plan = AND_search(results(state,action),path, action_set, goal_description,results)
-        if (plan != False):
-            return action,plan
-        
-    return False
+        new_state = results(state,action)
+        new_path = [new_state,*path]
+        success, or_plan = AND_search(new_state,action_set, goal_description,results, new_path, depth)
+        if success:
+            return True, [action, or_plan]
+
+    return False, None
     
-def AND_search(states, path, action_set, goal_description,results):
+def AND_search(states, action_set, goal_description,results,path,depth):
     
     for state in states:
-        
-        
+        depth += 1
+        plan = {}
+        success, and_plan = OR_search(state, action_set, goal_description, results, path, depth)
+        plans[state] = and_plan
+        # print(and_plan, file = sys.stderr)
+        if not success:
+            return False, None
+        # plan[state] = and_plan
 
-    return
+    return True, plans
 
 def and_or_graph_search(initial_state, action_set, goal_description, results):
-    
-    OR_search(initial_state, [], action_set)
+    path = []
+    depth = 0
+    success, plan = OR_search(initial_state, action_set, goal_description,results, path, depth)
 
+    if success:
+        return plan
+    else:
+        return False
     
-
     # Here you should implement AND-OR-GRAPH-SEARCH. We are going to use a different plan format than the one used
     # in the textbook.
     # The algorithm should return a pair (worst_case_length, or_plan) where the plan is of the following format
@@ -71,4 +86,4 @@ def and_or_graph_search(initial_state, action_set, goal_description, results):
     #     ]
     #   }
     # ]
-    raise NotImplementedError()
+    # raise NotImplementedError()
