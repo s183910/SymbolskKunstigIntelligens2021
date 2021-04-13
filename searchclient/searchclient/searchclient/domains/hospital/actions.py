@@ -386,7 +386,8 @@ class StickyPullAction:
         new_agent_position = self.calculate_agent_positions(current_agent_position)
         new_box_position = current_agent_position
         
-        # New agent position is a destination because it is unoccupied before the action and occupied after the action.
+        # New agent position is a destination because it is unoccupied before the action 
+        # and occupied after the action.
         destinations = [new_agent_position, new_box_position]
         # Since a Move action never moves a box, we can just return the empty value.
         boxes_moved = [current_box_position]
