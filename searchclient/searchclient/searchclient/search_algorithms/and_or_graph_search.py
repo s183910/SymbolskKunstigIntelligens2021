@@ -12,9 +12,37 @@
 # limitations under the License.
 
 import sys
+d=0
 
+def OR_search(state, path, action_set, goal_description,results):
+    if (goal_description.is_goal(state)):
+        return 0,[]
+    # if state is on path: return False
+    if state in path:
+        return 0,False
+
+    actions = state.get_applicable_actions(action_set)
+    for action in actions:
+        plan = [] 
+        or_plan = AND_search(results(state,action),path, action_set, goal_description,results)
+        if (plan != False):
+            return action,plan
+        
+    return False
+    
+def AND_search(states, path, action_set, goal_description,results):
+    
+    for state in states:
+        
+        
+
+    return
 
 def and_or_graph_search(initial_state, action_set, goal_description, results):
+    
+    OR_search(initial_state, [], action_set)
+
+    
 
     # Here you should implement AND-OR-GRAPH-SEARCH. We are going to use a different plan format than the one used
     # in the textbook.
