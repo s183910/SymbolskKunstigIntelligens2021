@@ -16,10 +16,13 @@ d=0
 
 def OR_search(state, path, action_set, goal_description,results):
     if (goal_description.is_goal(state)):
-        return 0,[]
-    # if state is on path: return False
+        return False,[] 
+   
     if state in path:
-        return 0,False
+        return False, False  
+
+    if d==0:
+        return False, False 
 
     actions = state.get_applicable_actions(action_set)
     for action in actions:
@@ -31,7 +34,8 @@ def OR_search(state, path, action_set, goal_description,results):
     return False
     
 def AND_search(states, path, action_set, goal_description,results):
-    
+    plans
+
     for state in states:
         
         
