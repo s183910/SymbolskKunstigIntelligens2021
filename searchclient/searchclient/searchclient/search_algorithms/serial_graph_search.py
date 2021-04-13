@@ -16,20 +16,12 @@ from search_algorithms.graph_search import graph_search
 
 
 def serial_graph_search(initial_state, action_set, goal_description, frontier):
-    
-    # Here you should implement the SERIAL-GRAPH-SEARCH algorithm
-    # Some methods you might find useful includes:
-    # - 'goal_description.num_sub_goals()' and 'goal_description.get_sub_goal(sub_goal_index)'
-    # - 'state.result_of_plan(plan)' which computes the resulting state from executing 'plan' starting in 'state'
-
     n_sub_goals = goal_description.num_sub_goals()
     
     plan = []
 
     for index in range(n_sub_goals):
-
         sub_goal = goal_description.get_sub_goal(index)
-
         success, sub_plan = graph_search(initial_state, action_set, sub_goal, frontier)
 
         if success:
