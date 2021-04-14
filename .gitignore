@@ -131,3 +131,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 searchclient/searchclient/searchclient/search_algorithms/__pycache__/graph_search.cpython-38.pyc
+searchclient/searchclient/searchclient/search_algorithms/__pycache__/graph_search.cpython-38.pyc
