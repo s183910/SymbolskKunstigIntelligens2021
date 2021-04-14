@@ -1,0 +1,26 @@
+#domain
+hospital
+#levelname
+KatogRas_3B
+#colors
+red: 0, A
+green: 1, B
+#initial
+++++++++++++
++  0     + +
++ ++++++++A+
++        B +
+++++++++++B+
++1  BBBBBB +
++     BBBBB+
+++++++++++++
+#goal
+++++++++++++
++        +A+
++ ++++++++ +
++   B      +
+++++++++++ +
++          +
++   B      +
+++++++++++++
+#end
