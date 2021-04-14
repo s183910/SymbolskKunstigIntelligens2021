@@ -84,21 +84,27 @@ def helper_agent_type(level, initial_state, action_library, goal_description, fr
                     helpee_delta = joint_action[0].agent_delta
                     helpee_position , helpee_char = initial_state.agent_positions[0]
                     obstacle_position = (helpee_position[0] + helpee_delta[0],helpee_position[1] + helpee_delta[1])
-                    # print(helpee_position,file=sys.stderr)
-                    # print(helpee_delta,file=sys.stderr)
-                    # print(obstacle_position, file=sys.stderr)
+      
                     obstacle_index, obstacle_char = initial_state.box_at(obstacle_position)
-                    # helpee_position , helpee_char = initial_state.box_positions[0]
+
                     obstacle_color = level.colors[obstacle_char]
 
-                    exists=0
+                    # Bool to determine if an agent with matching color exists
+                    exists = 0
+                    # Loop through each agent and their chars and colors
                     for agent_index in range(level.num_agents):
                         _ , agent_char = initial_state.agent_positions[agent_index]
-                        if agent_char == obstacle_char:
+                        agent_color = level.colors[agent_char]
+
+                        # If there is an agent with matching color to obstacle, break loop
+                        if agent_color == obstacle_color:
                             exists = 1
                             break
-                    if exists:
+
+                    # Return false if not agent with matching color
+                    if not exists:
                         return False
+
                     negative = negative_goals(helpee_position, obstacle_char, plan)
                     negative_goal_description = goal_description.create_new_goal_description_of_same_type(negative)
                     
