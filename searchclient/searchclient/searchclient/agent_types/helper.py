@@ -83,8 +83,11 @@ def helper_agent_type(level, initial_state, action_library, goal_description, fr
                 else:
                     helpee_delta = joint_action[0].agent_delta
                     helpee_position , helpee_char = initial_state.agent_positions[0]
+
+
+
                     obstacle_position = (helpee_position[0] + helpee_delta[0],helpee_position[1] + helpee_delta[1])
-      
+
                     obstacle_index, obstacle_char = initial_state.box_at(obstacle_position)
 
                     obstacle_color = level.colors[obstacle_char]
@@ -105,7 +108,9 @@ def helper_agent_type(level, initial_state, action_library, goal_description, fr
                     if not exists:
                         return False
 
-                    negative = negative_goals(helpee_position, obstacle_char, plan)
+                    negative_obstacle = negative_goals(helpee_position, obstacle_char, plan)
+                    negative_agent = negative_goals(helpee_position, agent_char, plan)
+                    negative = negative_obstacle+negative_agent
                     negative_goal_description = goal_description.create_new_goal_description_of_same_type(negative)
                     
                     helper_action_set = [[GenericNoOp()]] * level.num_agents    
